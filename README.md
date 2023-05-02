@@ -3,7 +3,7 @@ A tool I created to check TCP connections, which I use frequently across multipl
 
 ## Installation
 ```
-go install github.com/Towsif12/tcpcheck
+go install github.com/Towsif12/tcpcheck@latest
 ```
 If you want to build it yourself, feel free to clone the repository and run `go build`
 
