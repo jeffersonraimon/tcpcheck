@@ -1,0 +1,56 @@
+package main
+
+import (
+	"fmt"
+	"net"
+	"os"
+	"strconv"
+	"time"
+
+	"github.com/fatih/color"
+)
+
+func main() {
+	if len(os.Args) != 3 {
+		fmt.Println("Usage: tcpcheck <IP> <Port>")
+		os.Exit(1)
+	}
+
+	ip := os.Args[1]
+	portStr := os.Args[2]
+	port, err := strconv.Atoi(portStr)
+	if err != nil {
+		fmt.Println("Invalid port number")
+		os.Exit(1)
+	}
+
+	for {
+		start := time.Now()
+		conn, err := net.DialTimeout("tcp", fmt.Sprintf("%s:%d", ip, port), time.Second)
+		elapsed := time.Since(start)
+		pingMs := elapsed.Seconds() * 1000
+
+		pingColor := color.New(color.FgHiWhite).SprintFunc()
+		if pingMs < 40 {
+			pingColor = color.New(color.FgHiGreen).SprintFunc()
+		} else if pingMs < 90 {
+			pingColor = color.New(color.FgHiYellow).SprintFunc()
+		} else {
+			pingColor = color.New(color.FgHiRed).SprintFunc()
+		}
+
+		if err == nil {
+			conn.Close()
+			fmt.Printf("Status: %s | Ping: %s | Port: %s | Protocol: %s\n",
+				color.HiGreenString("Connected"),
+				pingColor(fmt.Sprintf("%.0fms", pingMs)),
+				color.HiGreenString("%d", port),
+				color.HiGreenString("TCP"),
+			)
+		} else {
+			fmt.Printf("Status: %s - %s\n", color.HiRedString("Could not connect "), color.HiRedString(err.Error()))
+		}
+
+		time.Sleep(500 * time.Millisecond)
+	}
+}
