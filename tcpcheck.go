@@ -26,7 +26,8 @@ func main() {
 
 	for {
 		start := time.Now()
-		conn, err := net.DialTimeout("tcp", fmt.Sprintf("%s:%d", ip, port), time.Second)
+                addr := fmt.Sprintf("[%s]:%d", ip, port)
+                conn, err := net.DialTimeout("tcp", addr, time.Second)
 		elapsed := time.Since(start)
 		pingMs := elapsed.Seconds() * 1000
 
