@@ -1,25 +1,38 @@
-# workflow name
-name: Generate release-artifacts
+name: build
 
-# on events
 on:
+  workflow_dispatch:
   release:
-    types: 
-        - created
+    types: [ created ]
 
-# workflow tasks
+permissions:
+  contents: write
+
 jobs:
-  generate:
-    name: Generate cross-platform builds
+  xgo:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout the repository
-        uses: actions/checkout@v2
-      - name: Generate build files
-        uses: thatisuday/go-cross-build@v1
+      -
+        name: Checkout
+        uses: actions/checkout@v4
+      -
+        name: Build
+        uses: crazy-max/ghaction-xgo@v3
         with:
-            platforms: 'linux/amd64, darwin/amd64, darwin/arm64, windows/amd64'
-            package: ''
-            name: 'tcpcheck'
-            compress: 'false'
-            dest: 'dist'
+          xgo_version: latest
+          go_version: latest
+          dest: build
+          prefix: tcpcheck
+          targets: windows/amd64,linux/amd64,linux/arm64,darwin/arm64
+          v: true
+          x: false
+          race: false
+          ldflags: -s -w
+          buildmode: default
+          trimpath: true
+
+      - name: Release binary to GitHub
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            build/*
