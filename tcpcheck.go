@@ -26,8 +26,8 @@ func main() {
 
 	for {
 		start := time.Now()
-                addr := fmt.Sprintf("[%s]:%d", ip, port)
-                conn, err := net.DialTimeout("tcp", addr, time.Second)
+		addr := fmt.Sprintf("[%s]:%d", ip, port)
+		conn, err := net.DialTimeout("tcp", addr, time.Second)
 		elapsed := time.Since(start)
 		pingMs := elapsed.Seconds() * 1000
 
@@ -40,16 +40,23 @@ func main() {
 			pingColor = color.New(color.FgHiRed).SprintFunc()
 		}
 
+		timestamp := time.Now().Format("2006-01-02 15:04:05.000")
+
 		if err == nil {
 			conn.Close()
-			fmt.Printf("Status: %s | Ping: %s | Port: %s | Protocol: %s\n",
+			fmt.Printf("[%s] Status: %s | Ping: %s | Port: %s | Protocol: %s\n",
+				timestamp,
 				color.HiGreenString("Connected"),
 				pingColor(fmt.Sprintf("%.0fms", pingMs)),
 				color.HiGreenString("%d", port),
 				color.HiGreenString("TCP"),
 			)
 		} else {
-			fmt.Printf("Status: %s - %s\n", color.HiRedString("Could not connect "), color.HiRedString(err.Error()))
+			fmt.Printf("[%s] Status: %s - %s\n",
+				timestamp,
+				color.HiRedString("Could not connect"),
+				color.HiRedString(err.Error()),
+			)
 		}
 
 		time.Sleep(500 * time.Millisecond)
