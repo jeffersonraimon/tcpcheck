@@ -6,18 +6,22 @@ import (
 	"os"
 	"strconv"
 	"time"
+	"flag"
 
 	"github.com/fatih/color"
 )
 
 func main() {
-	if len(os.Args) != 3 {
-		fmt.Println("Usage: tcpcheck <IP> <Port>")
+	delay := flag.Float64("t", 0.5, "Delay conections in seconds")
+	flag.Parse()
+
+	if flag.NArg() != 2 {
+		fmt.Println("Usage: tcpcheck [-t seconds] <IP> <Port>")
 		os.Exit(1)
 	}
 
-	ip := os.Args[1]
-	portStr := os.Args[2]
+	ip := flag.Arg(0)
+	portStr := flag.Arg(1)
 	port, err := strconv.Atoi(portStr)
 	if err != nil {
 		fmt.Println("Invalid port number")
@@ -59,6 +63,6 @@ func main() {
 			)
 		}
 
-		time.Sleep(500 * time.Millisecond)
+		time.Sleep(time.Duration(*delay * float64(time.Second)))
 	}
 }
