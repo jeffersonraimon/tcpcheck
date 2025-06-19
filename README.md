@@ -16,12 +16,16 @@ tcpcheck 127.0.0.1 3306
 ## 🆕 New Features
 
 ### ⏱ Timestamp
+💡 *Feature suggested by [@iurynovarino](https://github.com/iurynovarino)*
+
 Each connection attempt now includes a full timestamp with date and time in the format:
 
 ![image](https://github.com/user-attachments/assets/2e69c157-4dc0-455a-ae30-d0006c2c068e)
 
 
 ### 💤 Delay Option (`-t`) 
+💡 *Feature suggested by  [@Tacioandrade](https://github.com/Tacioandrade)*
+
 You can define the interval between connection attempts using the `-t` flag.  
 The value is in **seconds** and supports decimals (e.g., `0.5`, `1.2`, etc).  
 The default delay is `0.5` seconds.
